@@ -12,8 +12,9 @@ class App extends Component {
     return (
       <div className="App">
         <Title/>
-        <Username/>
-        <Month/>
+        <Username>
+          <Month/>
+        </Username>
       </div>
     );
   }

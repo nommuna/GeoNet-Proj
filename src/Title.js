@@ -10,7 +10,7 @@ class Title extends Component {
       <div className="Title">
         <Container>
             <Row>
-               <h2>GeoNet "Big Brother"</h2>
+               <h2>GeoNet "Big Brother" Beta</h2>
             </Row>
         </Container>
       </div>

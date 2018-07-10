@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {Container, Row, Button, InputGroup, InputGroupAddon, InputGroupText, Input, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
 import _ from 'lodash';
+import Month from './Month'
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -11,6 +12,7 @@ class Username extends Component {
       error: null,
       isLoaded: false, 
       modal: false,
+      showMonth: false,
       id: '',
       userName: '',
       txtUsername:'',
@@ -75,11 +77,10 @@ class Username extends Component {
     });
   }
 
-
-  //KGalliher
   //public class fileds syntax to grab the context of 'this'
   //Get the user id then get the information from the user id {chaining fetch requests}
   getUserInfo = () => {
+    this.setState({showMonth: true})
     this.toggle()
     this.resetForm()
 
@@ -167,6 +168,7 @@ class Username extends Component {
             <div>{Object.keys(groupData).map((keyName, keyIndex) => (<p key = {keyIndex}> {keyName}: {groupData[keyName]}</p>))}</div>
           </ModalBody>
         </Modal>
+        <Month hideUI={this.showMonth} data={this.items} userName={this.state.txtUsername}/>
       </div>
     );
   }
