@@ -27,7 +27,6 @@ class Month extends Component {
   
   getActivityMonth = () => {
     var selectedMonth = this.state.value;
-    //console.log(selectedMonth);
     let arr = [];
 
     for(let key in this.state.items){
@@ -96,14 +95,14 @@ class Month extends Component {
                     <option value='11'>November</option>
                     <option value='12'>December</option>
                 </select>
-                <InputGroupAddon addonType='append'><Button color= 'secondary' onClick={this.showActivityByDate}>Submit</Button></InputGroupAddon>
+                <InputGroupAddon addonType='append'><Button outline color= 'primary' onClick={this.showActivityByDate}>Submit</Button></InputGroupAddon>
             </Row>
         </Container>
         <Modal isOpen={this.state.modal} toggle={this.toggle}>
           <ModalHeader toggle={this.toggle}>Results</ModalHeader>
           <ModalBody>
             <h5>{userName}</h5>
-            <div>{monthItems.map((item, i) => (<a key={i} href={item.url}>{item.url}</a>))}</div>
+            <div>{monthItems.map((item, i) => (<div key={i}><a key={i} href={item.url}><b>{item.verb}</b>: {item.url}</a></div>))}</div>
             <br/>
           </ModalBody>
         </Modal>

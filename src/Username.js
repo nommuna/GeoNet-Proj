@@ -77,9 +77,11 @@ class Username extends Component {
     });
   }
 
+
   //public class fileds syntax to grab the context of 'this'
   //Get the user id then get the information from the user id {chaining fetch requests}
-  getUserInfo = () => {
+  getUserInfo = (e) => {
+    e.preventDefault();
     this.setState({showMonth: true})
     this.toggle()
     this.resetForm()
@@ -133,7 +135,7 @@ class Username extends Component {
                     <InputGroupAddon addonType= 'prepend'>Find by Username</InputGroupAddon>
                     <Input placeholder='Username; ex: KGalliher' type='text' value={this.state.txtUsername} onChange={this.userHandler}/>
                     <Input placeholder='Year {optional}' type='number' value={this.state.txtYear} onChange={this.yearHandler}/>
-                    <InputGroupAddon addonType='append'><Button onClick={this.getUserInfo} color= 'secondary'>Submit</Button></InputGroupAddon>
+                    <InputGroupAddon addonType='append'><Button onClick={this.getUserInfo} outline color= 'primary'>Submit</Button></InputGroupAddon>
                </InputGroup> 
             </Row>
         </Container>
@@ -143,32 +145,33 @@ class Username extends Component {
             <h5>Error: {error.message}</h5>
           </ModalBody>
         </Modal>
+        <Month/>
         </div>
-      )  //Change this later
+      )  
     }
 
     return (
       <div className='Username'>
         <Container>
+          <form onSubmit={this.getUserInfo}>
             <Row>
                <InputGroup>
                     <InputGroupAddon addonType= 'prepend'>Find by Username</InputGroupAddon>
                     <Input placeholder='Username; ex: KGalliher' type='text' value={this.state.txtUsername} onChange={this.userHandler}/>
                     <Input placeholder='Year {optional}' type='number' value={this.state.txtYear} onChange={this.yearHandler}/>
-                    <InputGroupAddon addonType='append'><Button onClick={this.getUserInfo} color= 'secondary'>Submit</Button></InputGroupAddon>
+                    <InputGroupAddon addonType='append'><Button type= 'submit' onClick={this.getUserInfo} outline color= 'primary'>Submit</Button></InputGroupAddon>
                </InputGroup> 
             </Row>
+            </form>
         </Container>
         <Modal isOpen={this.state.modal} toggle={this.toggle}>
           <ModalHeader toggle={this.toggle}>Results</ModalHeader>
           <ModalBody>
-            {/* <h5>{userName}</h5>
-            <div>{items.map((item, i) => (<p key={i}>{item.url}</p>))}</div> */}
             <h5>{userName}</h5>
             <div>{Object.keys(groupData).map((keyName, keyIndex) => (<p key = {keyIndex}> {keyName}: {groupData[keyName]}</p>))}</div>
           </ModalBody>
         </Modal>
-        <Month hideUI={this.showMonth} data={this.items} userName={this.state.txtUsername}/>
+        <Month userName={this.state.txtUsername}/>
       </div>
     );
   }
