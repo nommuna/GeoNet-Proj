@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Username from './Username';
 import Title from './Title';
 import Month from './Month';
+import InfoChart from './InfoChart';
 import logo from './logo.svg';
 import './App.css';
 
@@ -14,6 +15,7 @@ class App extends Component {
         <Title/>
         <Username>
           <Month/>
+          <InfoChart/>
         </Username>
       </div>
     );

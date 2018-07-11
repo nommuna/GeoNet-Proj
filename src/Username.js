@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {Container, Row, Button, InputGroup, InputGroupAddon, InputGroupText, Input, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
 import _ from 'lodash';
 import Month from './Month'
+import Infochart from './InfoChart';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -12,13 +13,14 @@ class Username extends Component {
       error: null,
       isLoaded: false, 
       modal: false,
-      showMonth: false,
+      showChart: false,
       id: '',
       userName: '',
       txtUsername:'',
       txtYear: '',
       items: [],
-      groupData: []
+      groupData: [],
+      chartData: []
     }
   }
 
@@ -58,12 +60,14 @@ class Username extends Component {
 
   reportYearActivity = () => {
     let arr = [];
+    let arr2 = [];
     for(let key in this.state.items){
       if(this.state.items.hasOwnProperty(key)){
         var val = this.state.items[key];
         var year = new Date(val.published).getFullYear();
         if(this.state.txtYear === year.toString()){
           arr.push(val);
+          arr2.push(val.published);
         }
       }
     }
@@ -73,16 +77,33 @@ class Username extends Component {
     }) 
 
     this.setState({
-      groupData: group
+      groupData: group,
     });
+    this.reportGraphData(arr2);
   }
 
+  reportGraphData = (arr) => {
+    const monthNames = ["January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
+    var temp = [];
+    arr.forEach((element) => {
+      temp.push(monthNames[new Date(element).getMonth()]);
+    });
+
+    let groupMonths = _.countBy(temp, (obj) => {
+      return obj;
+    });
+    
+    console.log(groupMonths);
+
+    this.setState({chartData: groupMonths})
+  }
 
   //public class fileds syntax to grab the context of 'this'
   //Get the user id then get the information from the user id {chaining fetch requests}
   getUserInfo = (e) => {
     e.preventDefault();
-    this.setState({showMonth: true})
     this.toggle()
     this.resetForm()
 
@@ -107,6 +128,7 @@ class Username extends Component {
       console.log(data);
       this.setState({
         isLoaded: true, 
+        showChart: true,
         items: data.list
       })
 
@@ -130,14 +152,16 @@ class Username extends Component {
       return (
         <div>
           <Container>
+          <form onSubmit={this.getUserInfo}>
             <Row>
                <InputGroup>
                     <InputGroupAddon addonType= 'prepend'>Find by Username</InputGroupAddon>
                     <Input placeholder='Username; ex: KGalliher' type='text' value={this.state.txtUsername} onChange={this.userHandler}/>
                     <Input placeholder='Year {optional}' type='number' value={this.state.txtYear} onChange={this.yearHandler}/>
-                    <InputGroupAddon addonType='append'><Button onClick={this.getUserInfo} outline color= 'primary'>Submit</Button></InputGroupAddon>
+                    <InputGroupAddon addonType='append'><Button type= 'submit' onClick={this.getUserInfo} outline color= 'primary'>Submit</Button></InputGroupAddon>
                </InputGroup> 
             </Row>
+          </form>
         </Container>
         <Modal isOpen={this.state.modal} toggle={this.toggle}>
           <ModalHeader toggle={this.toggle}>Results</ModalHeader>
@@ -148,32 +172,33 @@ class Username extends Component {
         <Month/>
         </div>
       )  
-    }
-
-    return (
-      <div className='Username'>
-        <Container>
-          <form onSubmit={this.getUserInfo}>
-            <Row>
-               <InputGroup>
-                    <InputGroupAddon addonType= 'prepend'>Find by Username</InputGroupAddon>
-                    <Input placeholder='Username; ex: KGalliher' type='text' value={this.state.txtUsername} onChange={this.userHandler}/>
-                    <Input placeholder='Year {optional}' type='number' value={this.state.txtYear} onChange={this.yearHandler}/>
-                    <InputGroupAddon addonType='append'><Button type= 'submit' onClick={this.getUserInfo} outline color= 'primary'>Submit</Button></InputGroupAddon>
-               </InputGroup> 
-            </Row>
+    } else {
+      return (
+        <div className='Username'>
+          <Container>
+            <form onSubmit={this.getUserInfo}>
+              <Row>
+                 <InputGroup>
+                      <InputGroupAddon addonType= 'prepend'>Find by Username</InputGroupAddon>
+                      <Input placeholder='Username; ex: KGalliher' type='text' value={this.state.txtUsername} onChange={this.userHandler}/>
+                      <Input placeholder='Year {optional}' type='number' value={this.state.txtYear} onChange={this.yearHandler}/>
+                      <InputGroupAddon addonType='append'><Button type= 'submit' onClick={this.getUserInfo} outline color= 'primary'>Submit</Button></InputGroupAddon>
+                 </InputGroup> 
+              </Row>
             </form>
-        </Container>
-        <Modal isOpen={this.state.modal} toggle={this.toggle}>
-          <ModalHeader toggle={this.toggle}>Results</ModalHeader>
-          <ModalBody>
-            <h5>{userName}</h5>
-            <div>{Object.keys(groupData).map((keyName, keyIndex) => (<p key = {keyIndex}> {keyName}: {groupData[keyName]}</p>))}</div>
-          </ModalBody>
-        </Modal>
-        <Month userName={this.state.txtUsername}/>
-      </div>
-    );
+          </Container>
+          <Modal isOpen={this.state.modal} toggle={this.toggle}>
+            <ModalHeader toggle={this.toggle}>Results</ModalHeader>
+            <ModalBody>
+              <h5>{userName}</h5>
+              <div>{Object.keys(groupData).map((keyName, keyIndex) => (<p key = {keyIndex}> {keyName}: {groupData[keyName]}</p>))}</div>
+            </ModalBody>
+          </Modal>
+          <Month userName={this.state.txtUsername}/>
+          {this.state.showChart ? <Infochart myData={this.state.groupData} infoChart2Items={this.state.chartData}/> : null}
+        </div>
+      );
+    }
   }
 }
 
