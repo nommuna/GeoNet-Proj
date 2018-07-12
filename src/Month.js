@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Container, Row, Button, InputGroup, InputGroupAddon, InputGroupText, Input, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
+import {Container, Row, Button, InputGroupAddon, Modal, ModalHeader, ModalBody} from 'reactstrap';
 import _ from 'lodash';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Month.css'

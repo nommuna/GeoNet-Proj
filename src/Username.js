@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Container, Row, Button, InputGroup, InputGroupAddon, InputGroupText, Input, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
+import {Container, Row, Button, InputGroup, InputGroupAddon, Input, Modal, ModalHeader, ModalBody} from 'reactstrap';
 import _ from 'lodash';
 import Month from './Month'
 import Infochart from './InfoChart';
@@ -11,7 +11,6 @@ class Username extends Component {
     super(props);
     this.state = {
       error: null,
-      isLoaded: false, 
       modal: false,
       showChart: false,
       id: '',
@@ -19,8 +18,7 @@ class Username extends Component {
       txtUsername:'',
       txtYear: '',
       items: [],
-      groupData: [],
-      chartData: []
+      groupData: []
     }
   }
 
@@ -39,7 +37,6 @@ class Username extends Component {
   resetForm = () => {
     this.setState({
       error: null,
-      isLoaded: false, 
       items: [],
       id: '',
       modal: false,
@@ -55,7 +52,6 @@ class Username extends Component {
     this.setState({
       groupData: group
     });
-    //console.log(this.state.items);
   }
 
   reportYearActivity = () => {
@@ -79,26 +75,25 @@ class Username extends Component {
     this.setState({
       groupData: group,
     });
-    this.reportGraphData(arr2);
   }
 
-  reportGraphData = (arr) => {
-    const monthNames = ["January", "February", "March", "April", "May", "June",
-      "July", "August", "September", "October", "November", "December"
-    ];
-    var temp = [];
-    arr.forEach((element) => {
-      temp.push(monthNames[new Date(element).getMonth()]);
-    });
+  // reportGraphData = (arr) => {
+  //   const monthNames = ["January", "February", "March", "April", "May", "June",
+  //     "July", "August", "September", "October", "November", "December"
+  //   ];
+  //   var temp = [];
+  //   arr.forEach((element) => {
+  //     temp.push(monthNames[new Date(element).getMonth()]);
+  //   });
 
-    let groupMonths = _.countBy(temp, (obj) => {
-      return obj;
-    });
-    
-    console.log(groupMonths);
+  //   let groupMonths = _.countBy(temp, (obj) => {
+  //     return obj;
+  //   });
 
-    this.setState({chartData: groupMonths})
-  }
+  //   console.log(groupMonths);
+
+  //   this.setState({chartData: groupMonths})
+  // }
 
   //public class fileds syntax to grab the context of 'this'
   //Get the user id then get the information from the user id {chaining fetch requests}
@@ -115,9 +110,7 @@ class Username extends Component {
         return response.json();
       } 
     }).then((data) => {
-      console.log(data);
       this.setState({
-        isLoaded: true,
         id: data.id,
         userName: data.displayName
       });
@@ -125,9 +118,7 @@ class Username extends Component {
     }).then(function(response) {
       return response.json()
     }).then((data) => {
-      console.log(data);
       this.setState({
-        isLoaded: true, 
         showChart: true,
         items: data.list
       })
@@ -139,15 +130,14 @@ class Username extends Component {
       }
     },(error) => {
       this.setState({
-        isLoaded: true,
         modal: true,
-        error
+        error: "Invalid username"
       });
     });
   }
 
   render() {
-    const {error, isLoaded, items, userName, groupData} = this.state; //object deconstruction
+    const {error, items, userName, groupData} = this.state; //object deconstruction
     if(error){
       return (
         <div>
@@ -166,7 +156,7 @@ class Username extends Component {
         <Modal isOpen={this.state.modal} toggle={this.toggle}>
           <ModalHeader toggle={this.toggle}>Results</ModalHeader>
           <ModalBody>
-            <h5>Error: {error.message}</h5>
+            <h5>Error: {error}</h5>
           </ModalBody>
         </Modal>
         <Month/>
@@ -195,7 +185,7 @@ class Username extends Component {
             </ModalBody>
           </Modal>
           <Month userName={this.state.txtUsername}/>
-          {this.state.showChart ? <Infochart myData={this.state.groupData} infoChart2Items={this.state.chartData}/> : null}
+          {this.state.showChart ? <Infochart myData={this.state.groupData}/> : null}
         </div>
       );
     }

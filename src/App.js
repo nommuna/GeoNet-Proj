@@ -3,7 +3,6 @@ import Username from './Username';
 import Title from './Title';
 import Month from './Month';
 import InfoChart from './InfoChart';
-import logo from './logo.svg';
 import './App.css';
 
 
