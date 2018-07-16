@@ -3,6 +3,9 @@
 #proxy
 .env
 
+#Json
+package.json
+
 # dependencies
 /node_modules
 
