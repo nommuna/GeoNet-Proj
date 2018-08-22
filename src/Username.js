@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import {Container, Row, Button, InputGroup, InputGroupAddon, Input, Modal, ModalHeader, ModalBody} from 'reactstrap';
+import {Container, Row, Button, InputGroup, InputGroupAddon, Input, Modal, ModalHeader, ModalBody, Col} from 'reactstrap';
 import _ from 'lodash';
 import Month from './Month'
 import Infochart from './InfoChart';
+import MonthChart from './MonthChart';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -18,7 +19,8 @@ class Username extends Component {
       txtUsername:'',
       txtYear: '',
       items: [],
-      groupData: []
+      groupData: [],
+      monthData: []
     }
   }
 
@@ -44,6 +46,7 @@ class Username extends Component {
     });
   }
 
+  //Report all activity on geoNet
   reportAllActivity = () => {
     let group = _.countBy(this.state.items,(obj) => {
       return obj.verb.replace('jive:', '');
@@ -54,6 +57,7 @@ class Username extends Component {
     });
   }
 
+  //Report all activity on geoNet by year
   reportYearActivity = () => {
     let arr = [];
     let arr2 = [];
@@ -68,12 +72,21 @@ class Username extends Component {
       }
     }
 
+    const monthNames = ["January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
+
+    let monthGroup = _.countBy(arr, (obj) => {
+      return monthNames[new Date(obj.published).getMonth()]
+    });
+
     let group = _.countBy(arr, (obj) => {
       return obj.verb.replace('jive:', '');
     }) 
 
     this.setState({
       groupData: group,
+      monthData: monthGroup
     });
   }
 
@@ -137,7 +150,7 @@ class Username extends Component {
   }
 
   render() {
-    const {error, items, userName, groupData} = this.state; //object deconstruction
+    const {error, items, userName, groupData, monthData} = this.state; //object deconstruction
     if(error){
       return (
         <div>
@@ -181,11 +194,23 @@ class Username extends Component {
             <ModalHeader toggle={this.toggle}>Results</ModalHeader>
             <ModalBody>
               <h5>{userName}</h5>
+              <h6>Year Total</h6>
               <div>{Object.keys(groupData).map((keyName, keyIndex) => (<p key = {keyIndex}> {keyName}: {groupData[keyName]}</p>))}</div>
+              <h6>Month Total</h6>
+              <div>{Object.keys(monthData).map((keyName, keyIndex) => (<p key = {keyIndex}> {keyName}: {monthData[keyName]}</p>))}</div>
             </ModalBody>
           </Modal>
           <Month userName={this.state.txtUsername}/>
-          {this.state.showChart ? <Infochart myData={this.state.groupData}/> : null}
+          <Container>
+            <Row>
+              <Col>
+                {this.state.showChart ? <Infochart myData={this.state.groupData}/> : null}
+              </Col>
+              <Col>
+                {this.state.showChart ? <MonthChart myData={this.state.monthData}/> : null}
+              </Col>
+            </Row>
+          </Container>
         </div>
       );
     }
