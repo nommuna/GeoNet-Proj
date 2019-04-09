@@ -1,8 +1,6 @@
 ## GeoNet Project
 React app for showing how much you contributed to GeoNet.
 
-## Please note: This is in beta. They may be bugs. 
-
 ### What this app used for?
 This app was made for anyone looking for an easy way to look up how much they have contributed to GeoNet. 
 
@@ -16,10 +14,10 @@ This app was made for anyone looking for an easy way to look up how much they ha
 - <b>Helped:</b> How many times your responses were helpful to someone. 
 
 ### Where are you grabbing the data? 
-- Data is fetched from the GeoNet API.
+- Data is fetched from the Jive API.
 
 ### Tools used
  - React and create-react-app
  - reactstrap
  - react-chartjs-2 for charting
- - GeoNet API
+ - Jive API
